@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit ? 'Edit Category' : 'New Category'} + ' - Wish Tracker'">Category Form - Wish Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" th:href="@{/wishes}">
+                <i class="bi bi-star-fill"></i> Wish Tracker
+            </a>
+            <div class="d-flex align-items-center" th:if="${currentUser != null}">
+                <span class="navbar-text me-3 text-white" th:text="${currentUser.name}">User</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h4 th:text="${isEdit ? 'Edit Category' : 'Create New Category'}">Category Form</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Error Message -->
+                        <div class="alert alert-danger" th:if="${errorMessage != null}">
+                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${errorMessage}">Error</span>
+                        </div>
+
+                        <form th:action="${isEdit ? '/categories/' + category.id : '/categories'}" th:object="${category}" method="post">
+                            <!-- Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                       placeholder="e.g., Travel, Books, Fitness" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" th:field="*{description}"
+                                          th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
+                                          rows="3" placeholder="Optional description"></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description error</div>
+                            </div>
+
+                            <!-- Color -->
+                            <div class="mb-3">
+                                <label for="color" class="form-label">Color <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color" id="color" th:field="*{color}"
+                                           th:classappend="${#fields.hasErrors('color')} ? 'is-invalid' : ''"
+                                           title="Choose category color" required>
+                                    <input type="text" class="form-control" th:field="*{color}" readonly>
+                                </div>
+                                <div class="form-text">Choose a color to visually identify this category</div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('color')}" th:errors="*{color}">Color error</div>
+
+                                <!-- Suggested Colors -->
+                                <div class="mt-2">
+                                    <small class="text-muted">Suggested colors:</small>
+                                    <div class="d-flex gap-2 mt-1">
+                                        <button type="button" class="btn btn-sm p-2 border" style="background-color: #3B82F6; width: 30px; height: 30px;" onclick="setColor('#3B82F6')" title="Blue"></button>
+                                        <button type="button" class="btn btn-sm p-2 border" style="background-color: #8B5CF6; width: 30px; height: 30px;" onclick="setColor('#8B5CF6')" title="Purple"></button>
+                                        <button type="button" class="btn btn-sm p-2 border" style="background-color: #10B981; width: 30px; height: 30px;" onclick="setColor('#10B981')" title="Green"></button>
+                                        <button type="button" class="btn btn-sm p-2 border" style="background-color: #F59E0B; width: 30px; height: 30px;" onclick="setColor('#F59E0B')" title="Orange"></button>
+                                        <button type="button" class="btn btn-sm p-2 border" style="background-color: #EC4899; width: 30px; height: 30px;" onclick="setColor('#EC4899')" title="Pink"></button>
+                                        <button type="button" class="btn btn-sm p-2 border" style="background-color: #EF4444; width: 30px; height: 30px;" onclick="setColor('#EF4444')" title="Red"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a th:href="@{/categories}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i> <span th:text="${isEdit ? 'Update' : 'Create'}">Save</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function setColor(colorValue) {
+            document.getElementById('color').value = colorValue;
+            document.querySelectorAll('input[type="text"][name="color"]').forEach(input => {
+                input.value = colorValue;
+            });
+        }
+    </script>
+</body>
+</html>

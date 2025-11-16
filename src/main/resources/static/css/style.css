@@ -1,0 +1,405 @@
+/* ============================================
+   Wish Tracker - Custom Styles
+   ============================================ */
+
+/* CSS Variables */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+
+    --wish-column-bg: #f8f9fa;
+    --in-progress-column-bg: #e7f1ff;
+    --achieved-column-bg: #d1f2eb;
+
+    --shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075);
+    --shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    --shadow-lg: 0 1rem 3rem rgba(0,0,0,.175);
+
+    --border-radius: 0.375rem;
+    --border-radius-lg: 0.5rem;
+}
+
+/* Global Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-size: 1.25rem;
+}
+
+.navbar-brand i {
+    color: #ffc107;
+}
+
+/* Login Page */
+.login-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-page .card {
+    border: none;
+    border-radius: var(--border-radius-lg);
+}
+
+/* Kanban Board */
+.kanban-column {
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    height: calc(100vh - 250px);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.kanban-header {
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.wish-column {
+    background-color: #f8f9fa;
+}
+
+.in-progress-column {
+    background-color: #e7f1ff;
+}
+
+.achieved-column {
+    background-color: #d1f2eb;
+}
+
+.kanban-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.kanban-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.kanban-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.kanban-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.kanban-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Wish Cards */
+.wish-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.wish-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.wish-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.wish-description {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+.wish-remarks {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.wish-date {
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.wish-actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.wish-actions .btn {
+    font-size: 0.875rem;
+}
+
+/* Category Badge */
+.category-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 1rem;
+    font-weight: 500;
+    color: #fff;
+    display: inline-block;
+}
+
+/* Empty State */
+.empty-state {
+    color: var(--text-muted);
+}
+
+/* Category Cards */
+.category-card {
+    transition: all 0.2s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.category-color-indicator {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Forms */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.invalid-feedback {
+    display: block;
+}
+
+/* Buttons */
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+    transform: translateY(-1px);
+}
+
+/* Alerts */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+}
+
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.card-header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+}
+
+/* Modals */
+.modal-content {
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Footer */
+.footer {
+    margin-top: 3rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .kanban-column {
+        height: auto;
+        min-height: 300px;
+        margin-bottom: 1rem;
+    }
+
+    .navbar-nav {
+        margin-top: 1rem;
+    }
+
+    .navbar .d-flex {
+        margin-top: 1rem;
+    }
+
+    .wish-actions {
+        justify-content: space-between;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.wish-card {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Utilities */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Badge Customization */
+.badge {
+    font-weight: 500;
+}
+
+/* Loading States */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Custom Scrollbar for entire page */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .btn,
+    .wish-actions,
+    .footer {
+        display: none;
+    }
+
+    .kanban-column {
+        break-inside: avoid;
+    }
+}
