@@ -3,81 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Wishes - Wish Tracker</title>
+    <title>Wish List - Wish Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <!-- Navigation (copied from layout for simplicity) -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" th:href="@{/wishes}">
-                <i class="bi bi-star-fill"></i> Wish Tracker
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/wishes}">
-                            <i class="bi bi-kanban"></i> My Wishes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/categories}">
-                            <i class="bi bi-tags"></i> Categories
-                        </a>
-                    </li>
-                </ul>
-                <div class="d-flex align-items-center" th:if="${currentUser != null}">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a th:href="@{/wishes}" class="sidebar-menu-item active">
+                    <i class="bi bi-list-ul"></i>
+                    <span>Wish List</span>
+                </a>
+                <a th:href="@{/categories}" class="sidebar-menu-item">
+                    <i class="bi bi-grid"></i>
+                    <span>Categories</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <a th:href="@{/wishes}" class="brand">
+                    <i class="bi bi-star-fill"></i>
+                    <span>WISH TRACKER</span>
+                </a>
+                <div class="user-profile" th:if="${currentUser != null}">
                     <img th:if="${currentUser.pictureUrl != null}"
                          th:src="${currentUser.pictureUrl}"
                          alt="Profile"
-                         class="rounded-circle me-2"
-                         style="width: 40px; height: 40px; object-fit: cover;">
-                    <span class="navbar-text me-3 text-white" th:text="${currentUser.name}">User Name</span>
-                    <form th:action="@{/logout}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-outline-light btn-sm">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </button>
-                    </form>
+                         class="user-avatar">
+                </div>
+            </header>
+
+            <!-- Flash Messages -->
+            <div class="px-4 pt-3" th:if="${successMessage != null or errorMessage != null}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${successMessage != null}">
+                    <i class="bi bi-check-circle"></i> <span th:text="${successMessage}">Success</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${errorMessage != null}">
+                    <i class="bi bi-exclamation-triangle"></i> <span th:text="${errorMessage}">Error</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>
-        </div>
-    </nav>
 
-    <!-- Flash Messages -->
-    <div class="container mt-3" th:if="${successMessage != null or errorMessage != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${successMessage != null}">
-            <i class="bi bi-check-circle"></i> <span th:text="${successMessage}">Success</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${errorMessage != null}">
-            <i class="bi bi-exclamation-triangle"></i> <span th:text="${errorMessage}">Error</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="container-fluid mt-4">
-        <!-- Page Header -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <h2><i class="bi bi-kanban"></i> My Wishes</h2>
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Wish List</h1>
+                <p class="page-subtitle">Track your wishes from idea to achievement</p>
             </div>
-            <div class="col-md-6 text-md-end">
-                <a th:href="@{/wishes/new}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Add New Wish
-                </a>
-            </div>
-        </div>
 
-        <!-- Filter Section -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <select class="form-select" id="categoryFilter" onchange="filterByCategory()">
+            <!-- Search and Filter Bar -->
+            <div class="search-filter-bar">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by title..." onkeyup="filterWishes()">
+                </div>
+                <select class="form-select filter-dropdown" id="categoryFilter" onchange="filterByCategory()">
                     <option value="">All Categories</option>
                     <option th:each="category : ${categories}"
                             th:value="${category.id}"
@@ -86,183 +73,208 @@
                         Category
                     </option>
                 </select>
+                <a th:href="@{/wishes/new}" class="btn-add-wish">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add New Wish</span>
+                </a>
             </div>
-        </div>
 
-        <!-- Kanban Board -->
-        <div class="row">
-            <!-- WISH Column -->
-            <div class="col-md-4 mb-4">
-                <div class="kanban-column">
-                    <div class="kanban-header wish-column">
-                        <h5><i class="bi bi-lightbulb"></i> Wish <span class="badge bg-secondary" th:text="${#lists.size(wishWishes)}">0</span></h5>
+            <!-- Status Tabs -->
+            <div class="status-tabs">
+                <div class="status-tab active" onclick="showStatus('wish')" id="tab-wish">Wish</div>
+                <div class="status-tab" onclick="showStatus('in-progress')" id="tab-in-progress">In Progress</div>
+                <div class="status-tab" onclick="showStatus('achieved')" id="tab-achieved">Achieved</div>
+            </div>
+
+            <!-- Wish List Content -->
+            <div class="wish-list-content">
+                <!-- Wish Status Section -->
+                <div id="wish-section" class="status-section">
+                    <div th:if="${#lists.isEmpty(wishWishes)}" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-2">No wishes yet</p>
                     </div>
-                    <div class="kanban-body">
-                        <div th:if="${#lists.isEmpty(wishWishes)}" class="empty-state text-center py-4">
-                            <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-2">No wishes yet</p>
+                    <div th:each="wish : ${wishWishes}" class="wish-card">
+                        <div class="wish-card-header">
+                            <h3 class="wish-title" th:text="${wish.title}">Wish Title</h3>
+                            <span class="wish-status-badge">Wish</span>
                         </div>
-                        <div th:each="wish : ${wishWishes}" class="wish-card mb-3" th:attr="data-category-color=${wish.categoryColor}">
-                            <h6 class="wish-title" th:text="${wish.title}">Wish Title</h6>
-                            <span class="badge category-badge mb-2" th:style="'background-color: ' + ${wish.categoryColor}" th:text="${wish.categoryName}">Category</span>
-                            <p class="wish-description text-muted small" th:text="${wish.description != null and #strings.length(wish.description) > 100 ? #strings.substring(wish.description, 0, 100) + '...' : wish.description}">Description</p>
-                            <p class="wish-remarks small fst-italic" th:if="${wish.remarks != null and !#strings.isEmpty(wish.remarks)}" th:text="${wish.remarks}">Remarks</p>
-                            <p class="wish-date text-muted small">
-                                <i class="bi bi-calendar"></i> <span th:text="${wish.formattedCreatedDate}">Date</span>
-                            </p>
-                            <div class="wish-actions">
-                                <a th:href="@{/wishes/{id}(id=${wish.id})}" class="btn btn-sm btn-outline-primary" title="View">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a th:href="@{/wishes/{id}/edit(id=${wish.id})}" class="btn btn-sm btn-outline-secondary" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                        <div class="wish-meta">
+                            <span class="wish-meta-item">
+                                <strong>Category:</strong> <span th:text="${wish.categoryName}">Category</span>
+                            </span>
+                            <span class="wish-meta-item">
+                                <strong>Created:</strong> <span th:text="${wish.formattedCreatedDate}">Date</span>
+                            </span>
+                        </div>
+                        <button type="button" class="remarks-toggle" th:if="${wish.remarks != null and !#strings.isEmpty(wish.remarks)}"
+                                th:onclick="'toggleRemarks(' + ${wish.id} + ')'">
+                            <i class="bi bi-chat-left-text"></i>
+                            <span>Remarks (<span th:text="${wish.remarksCount != null ? wish.remarksCount : '3'}">3</span>)</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div th:id="'remarks-' + ${wish.id}" class="wish-remarks" th:text="${wish.remarks}">
+                            Remarks content
+                        </div>
+                        <div class="wish-actions">
+                            <div class="wish-actions-left">
                                 <form th:action="@{/wishes/{id}/status(id=${wish.id})}" method="post" class="d-inline">
                                     <input type="hidden" name="status" value="IN_PROGRESS">
-                                    <button type="submit" class="btn btn-sm btn-success" title="Start">
-                                        <i class="bi bi-arrow-right"></i> Start
+                                    <button type="submit" class="btn-move-status">
+                                        <span>Move to In Progress</span>
+                                        <i class="bi bi-arrow-right"></i>
                                     </button>
                                 </form>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" th:attr="data-bs-target='#deleteModal' + ${wish.id}" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
                             </div>
+                            <button type="button" class="btn-delete" data-bs-toggle="modal" th:attr="data-bs-target='#deleteModal' + ${wish.id}" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
 
-                            <!-- Delete Confirmation Modal -->
-                            <div class="modal fade" th:id="'deleteModal' + ${wish.id}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Confirm Delete</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Are you sure you want to delete "<span th:text="${wish.title}">wish</span>"?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </div>
+                        <!-- Delete Confirmation Modal -->
+                        <div class="modal fade" th:id="'deleteModal' + ${wish.id}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Delete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete "<span th:text="${wish.title}">wish</span>"?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- IN_PROGRESS Column -->
-            <div class="col-md-4 mb-4">
-                <div class="kanban-column">
-                    <div class="kanban-header in-progress-column">
-                        <h5><i class="bi bi-hourglass-split"></i> In Progress <span class="badge bg-secondary" th:text="${#lists.size(inProgressWishes)}">0</span></h5>
+                <!-- In Progress Section -->
+                <div id="in-progress-section" class="status-section" style="display: none;">
+                    <div th:if="${#lists.isEmpty(inProgressWishes)}" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-2">No wishes in progress</p>
                     </div>
-                    <div class="kanban-body">
-                        <div th:if="${#lists.isEmpty(inProgressWishes)}" class="empty-state text-center py-4">
-                            <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-2">No wishes in progress</p>
+                    <div th:each="wish : ${inProgressWishes}" class="wish-card">
+                        <div class="wish-card-header">
+                            <h3 class="wish-title" th:text="${wish.title}">Wish Title</h3>
+                            <span class="wish-status-badge">In Progress</span>
                         </div>
-                        <div th:each="wish : ${inProgressWishes}" class="wish-card mb-3">
-                            <h6 class="wish-title" th:text="${wish.title}">Wish Title</h6>
-                            <span class="badge category-badge mb-2" th:style="'background-color: ' + ${wish.categoryColor}" th:text="${wish.categoryName}">Category</span>
-                            <p class="wish-description text-muted small" th:text="${wish.description != null and #strings.length(wish.description) > 100 ? #strings.substring(wish.description, 0, 100) + '...' : wish.description}">Description</p>
-                            <p class="wish-remarks small fst-italic" th:if="${wish.remarks != null and !#strings.isEmpty(wish.remarks)}" th:text="${wish.remarks}">Remarks</p>
-                            <p class="wish-date text-muted small">
-                                <i class="bi bi-calendar"></i> <span th:text="${wish.formattedCreatedDate}">Date</span>
-                            </p>
-                            <div class="wish-actions">
-                                <a th:href="@{/wishes/{id}(id=${wish.id})}" class="btn btn-sm btn-outline-primary" title="View">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a th:href="@{/wishes/{id}/edit(id=${wish.id})}" class="btn btn-sm btn-outline-secondary" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                        <div class="wish-meta">
+                            <span class="wish-meta-item">
+                                <strong>Category:</strong> <span th:text="${wish.categoryName}">Category</span>
+                            </span>
+                            <span class="wish-meta-item">
+                                <strong>Created:</strong> <span th:text="${wish.formattedCreatedDate}">Date</span>
+                            </span>
+                        </div>
+                        <button type="button" class="remarks-toggle" th:if="${wish.remarks != null and !#strings.isEmpty(wish.remarks)}"
+                                th:onclick="'toggleRemarks(' + ${wish.id} + ')'">
+                            <i class="bi bi-chat-left-text"></i>
+                            <span>Remarks</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div th:id="'remarks-' + ${wish.id}" class="wish-remarks" th:text="${wish.remarks}">
+                            Remarks content
+                        </div>
+                        <div class="wish-actions">
+                            <div class="wish-actions-left">
                                 <form th:action="@{/wishes/{id}/status(id=${wish.id})}" method="post" class="d-inline">
                                     <input type="hidden" name="status" value="ACHIEVED">
-                                    <button type="submit" class="btn btn-sm btn-success" title="Complete">
-                                        <i class="bi bi-check-circle"></i> Complete
+                                    <button type="submit" class="btn-move-status">
+                                        <span>Move to Achieved</span>
+                                        <i class="bi bi-arrow-right"></i>
                                     </button>
                                 </form>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" th:attr="data-bs-target='#deleteModal' + ${wish.id}" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
                             </div>
+                            <button type="button" class="btn-delete" data-bs-toggle="modal" th:attr="data-bs-target='#deleteModal' + ${wish.id}" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
 
-                            <!-- Delete Modal -->
-                            <div class="modal fade" th:id="'deleteModal' + ${wish.id}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Confirm Delete</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Are you sure you want to delete "<span th:text="${wish.title}">wish</span>"?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </div>
+                        <!-- Delete Modal -->
+                        <div class="modal fade" th:id="'deleteModal' + ${wish.id}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Delete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete "<span th:text="${wish.title}">wish</span>"?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ACHIEVED Column -->
-            <div class="col-md-4 mb-4">
-                <div class="kanban-column">
-                    <div class="kanban-header achieved-column">
-                        <h5><i class="bi bi-trophy"></i> Achieved <span class="badge bg-secondary" th:text="${#lists.size(achievedWishes)}">0</span></h5>
+                <!-- Achieved Section -->
+                <div id="achieved-section" class="status-section" style="display: none;">
+                    <div th:if="${#lists.isEmpty(achievedWishes)}" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-2">No achieved wishes yet</p>
                     </div>
-                    <div class="kanban-body">
-                        <div th:if="${#lists.isEmpty(achievedWishes)}" class="empty-state text-center py-4">
-                            <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-2">No achieved wishes yet</p>
+                    <div th:each="wish : ${achievedWishes}" class="wish-card">
+                        <div class="wish-card-header">
+                            <h3 class="wish-title" th:text="${wish.title}">Wish Title</h3>
+                            <span class="wish-status-badge">Achieved</span>
                         </div>
-                        <div th:each="wish : ${achievedWishes}" class="wish-card mb-3">
-                            <h6 class="wish-title" th:text="${wish.title}">Wish Title</h6>
-                            <span class="badge category-badge mb-2" th:style="'background-color: ' + ${wish.categoryColor}" th:text="${wish.categoryName}">Category</span>
-                            <p class="wish-description text-muted small" th:text="${wish.description != null and #strings.length(wish.description) > 100 ? #strings.substring(wish.description, 0, 100) + '...' : wish.description}">Description</p>
-                            <p class="wish-remarks small fst-italic" th:if="${wish.remarks != null and !#strings.isEmpty(wish.remarks)}" th:text="${wish.remarks}">Remarks</p>
-                            <p class="wish-date text-muted small">
-                                <i class="bi bi-trophy-fill text-warning"></i> Achieved: <span th:text="${wish.formattedAchievedDate}">Date</span>
-                            </p>
-                            <div class="wish-actions">
-                                <a th:href="@{/wishes/{id}(id=${wish.id})}" class="btn btn-sm btn-outline-primary" title="View">
-                                    <i class="bi bi-eye"></i>
+                        <div class="wish-meta">
+                            <span class="wish-meta-item">
+                                <strong>Category:</strong> <span th:text="${wish.categoryName}">Category</span>
+                            </span>
+                            <span class="wish-meta-item">
+                                <i class="bi bi-trophy-fill text-warning"></i> <strong>Achieved:</strong> <span th:text="${wish.formattedAchievedDate}">Date</span>
+                            </span>
+                        </div>
+                        <button type="button" class="remarks-toggle" th:if="${wish.remarks != null and !#strings.isEmpty(wish.remarks)}"
+                                th:onclick="'toggleRemarks(' + ${wish.id} + ')'">
+                            <i class="bi bi-chat-left-text"></i>
+                            <span>Remarks</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div th:id="'remarks-' + ${wish.id}" class="wish-remarks" th:text="${wish.remarks}">
+                            Remarks content
+                        </div>
+                        <div class="wish-actions">
+                            <div class="wish-actions-left">
+                                <a th:href="@{/wishes/{id}(id=${wish.id})}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> View
                                 </a>
-                                <a th:href="@{/wishes/{id}/edit(id=${wish.id})}" class="btn btn-sm btn-outline-secondary" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" th:attr="data-bs-target='#deleteModal' + ${wish.id}" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
                             </div>
+                            <button type="button" class="btn-delete" data-bs-toggle="modal" th:attr="data-bs-target='#deleteModal' + ${wish.id}" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
 
-                            <!-- Delete Modal -->
-                            <div class="modal fade" th:id="'deleteModal' + ${wish.id}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Confirm Delete</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Are you sure you want to delete "<span th:text="${wish.title}">wish</span>"?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </div>
+                        <!-- Delete Modal -->
+                        <div class="modal fade" th:id="'deleteModal' + ${wish.id}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Delete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete "<span th:text="${wish.title}">wish</span>"?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -275,6 +287,46 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Tab switching
+        function showStatus(status) {
+            // Hide all sections
+            document.querySelectorAll('.status-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.status-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section and activate tab
+            if (status === 'wish') {
+                document.getElementById('wish-section').style.display = 'block';
+                document.getElementById('tab-wish').classList.add('active');
+            } else if (status === 'in-progress') {
+                document.getElementById('in-progress-section').style.display = 'block';
+                document.getElementById('tab-in-progress').classList.add('active');
+            } else if (status === 'achieved') {
+                document.getElementById('achieved-section').style.display = 'block';
+                document.getElementById('tab-achieved').classList.add('active');
+            }
+        }
+
+        // Toggle remarks
+        function toggleRemarks(wishId) {
+            const remarksDiv = document.getElementById('remarks-' + wishId);
+            const toggleBtn = remarksDiv.previousElementSibling;
+
+            if (remarksDiv.classList.contains('show')) {
+                remarksDiv.classList.remove('show');
+                toggleBtn.classList.remove('expanded');
+            } else {
+                remarksDiv.classList.add('show');
+                toggleBtn.classList.add('expanded');
+            }
+        }
+
+        // Filter by category
         function filterByCategory() {
             const categoryId = document.getElementById('categoryFilter').value;
             if (categoryId) {
@@ -282,6 +334,21 @@
             } else {
                 window.location.href = '/wishes';
             }
+        }
+
+        // Search wishes
+        function filterWishes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const allWishCards = document.querySelectorAll('.wish-card');
+
+            allWishCards.forEach(card => {
+                const title = card.querySelector('.wish-title').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
