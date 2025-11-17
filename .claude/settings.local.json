@@ -3,7 +3,8 @@
     "allow": [
       "Bash(tree:*)",
       "Bash(mvn dependency:tree:*)",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []

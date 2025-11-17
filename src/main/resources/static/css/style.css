@@ -210,6 +210,8 @@ body {
     align-items: center;
     gap: 0.5rem;
     transition: all 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
 }
 
 .btn-add-wish:hover {
